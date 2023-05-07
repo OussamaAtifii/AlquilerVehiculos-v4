@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Vehiculos>
+    <Vehiculo Matricula="2222UUU" Tipo="Furgoneta">
+        <Marca>Ford</Marca>
+        <Modelo>Mondeo</Modelo>
+        <Furgoneta>
+            <Plazas>54</Plazas>
+            <Pma>3000</Pma>
+        </Furgoneta>
+    </Vehiculo>
+    <Vehiculo Matricula="9876TRF" Tipo="Furgoneta">
+        <Marca>Seat</Marca>
+        <Modelo>Leon</Modelo>
+        <Furgoneta>
+            <Plazas>10</Plazas>
+            <Pma>10</Pma>
+        </Furgoneta>
+    </Vehiculo>
+    <Vehiculo Matricula="2987YGF" Tipo="Autobus">
+        <Marca>Porche</Marca>
+        <Modelo>Saxo</Modelo>
+        <Autobus>
+            <Plazas>67</Plazas>
+        </Autobus>
+    </Vehiculo>
+</Vehiculos>

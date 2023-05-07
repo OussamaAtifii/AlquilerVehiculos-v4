@@ -1,0 +1,54 @@
+@font-face {
+    font-family: Poppins;
+    src: url('../fonts/Poppins-Regular.ttf');
+}
+
+* {
+    -fx-font-family: Poppins;
+}
+
+.text-field {
+    -fx-text-fill: #FFFFFF;
+}
+
+.button {
+    -fx-text-fill: #000000;
+}
+
+#btnClientes,
+#btnVehiculos,
+#btnAlquileres {
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: #05071e;
+    -fx-font-size: 20;
+    -fx-border-radius: 0;
+}
+
+.root {
+    -fx-font: 14 Poppins;
+    -fx-base: #3f474f;
+    -fx-accent: #e7eff7;
+    -fx-control-inner-background: #0B2447;
+}
+
+.table-view .table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 2 0 2 10px;
+}
+
+.table-view {
+    -fx-border-color: #0B2447;
+}
+
+#btnClientes:hover,
+#btnVehiculos:hover,
+#btnAlquileres:hover {
+    -fx-background-color: #0B2447;
+    -fx-border-color: #0B2447;
+    -fx-padding: 0.3em 0.6em 0.3em 0.6em;
+}
+
+.table-view .column-header {
+    -fx-background-color: #19376D;
+
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Clientes>
+    <Cliente Dni="95476261H">
+        <Nombre>Juas Prueba</Nombre>
+        <Telefono>653252654</Telefono>
+    </Cliente>
+    <Cliente Dni="11223344B">
+        <Nombre>Uwu Uwu</Nombre>
+        <Telefono>632632632</Telefono>
+    </Cliente>
+    <Cliente Dni="22334455Y">
+        <Nombre>Juai Pou</Nombre>
+        <Telefono>632632632</Telefono>
+    </Cliente>
+    <Cliente Dni="44620125X">
+        <Nombre>Juas</Nombre>
+        <Telefono>675354243</Telefono>
+    </Cliente>
+</Clientes>

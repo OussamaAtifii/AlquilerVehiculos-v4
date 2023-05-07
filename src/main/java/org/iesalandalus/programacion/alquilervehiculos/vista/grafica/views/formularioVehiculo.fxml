@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox fx:id="vbFormAlquiler" prefHeight="596.0" prefWidth="443.0" stylesheets="@../styles/estilos.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="596.0" prefWidth="443.0" style="-fx-background-color: #0B2447;" VBox.vgrow="ALWAYS">
+         <children>
+            <Label fx:id="lblMarca" layoutX="56.0" layoutY="89.0" prefHeight="26.0" prefWidth="50.0" text="Marca" textFill="WHITE">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblModelo" layoutX="55.0" layoutY="158.0" text="Modelo" textFill="WHITE">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblMatricula" layoutX="55.0" layoutY="230.0" text="Matricula" textFill="WHITE">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnCancelar" layoutX="305.0" layoutY="514.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="30.0" prefWidth="86.0" style="-fx-background-color: #A5D7E8;" text="Cancelar" />
+            <TextField fx:id="tfModelo" layoutX="211.0" layoutY="157.0" prefHeight="26.0" prefWidth="180.0" style="-fx-background-color: #19376D;" />
+            <TextField fx:id="tfMarca" layoutX="211.0" layoutY="88.0" prefHeight="30.0" prefWidth="180.0" style="-fx-background-color: #19376D;" />
+            <TextField fx:id="tfMatricula" layoutX="211.0" layoutY="227.0" prefHeight="26.0" prefWidth="180.0" style="-fx-background-color: #19376D;" />
+            <Text fx:id="textFormAlquiler" fill="WHITE" layoutX="134.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AÑADIR VEHICULO">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnAnadir" layoutX="222.0" layoutY="514.0" mnemonicParsing="false" onAction="#anadir" prefHeight="30.0" prefWidth="65.0" style="-fx-background-color: #A5D7E8;" text="Añadir" />
+            <MenuButton fx:id="mbTipoVehiculo" layoutX="211.0" layoutY="300.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="180.0" text="Tipo Vehiculo" />
+            <Label fx:id="lblTipoVehiculo" layoutX="55.0" layoutY="302.0" text="Tipo vehiculo" textFill="WHITE">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblCilindrada" layoutX="55.0" layoutY="377.0" text="Cilindrada" textFill="WHITE">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfCilindrada" layoutX="211.0" layoutY="375.0" prefHeight="26.0" prefWidth="180.0" style="-fx-background-color: #19376D;" />
+            <Label fx:id="lblPlazas" layoutX="55.0" layoutY="377.0" text="Plazas" textFill="WHITE">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfPlazas" layoutX="211.0" layoutY="375.0" prefHeight="26.0" prefWidth="180.0" style="-fx-background-color: #19376D;" />
+            <Label fx:id="lblPma" layoutX="55.0" layoutY="447.0" text="Peso maximo" textFill="WHITE">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfPma" layoutX="211.0" layoutY="445.0" prefHeight="26.0" prefWidth="180.0" style="-fx-background-color: #19376D;" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>
