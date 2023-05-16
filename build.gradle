@@ -16,6 +16,11 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+	
+	//MongoDB
+    //maven {
+        
+        //url "https://repo.mongodb.org/maven2/"
     
     // Repositorio jitpack.io donde están los accesos a las versiones de la librería entrada desde github
     maven { url 'https://jitpack.io' }
@@ -28,11 +33,20 @@ dependencies {
     testImplementation 'org.junit.platform:junit-platform-suite-api:1.9.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-suite-engine:1.9.1'
     
+    //MongoDB
+    implementation 'org.mongodb:mongodb-driver-sync:4.4.1'
+    
     // Mockito
     testImplementation "org.mockito:mockito-core:+"
       
     // Entrada para que el repositorio jitpack.io sepa acceder a la localización de librería entrada
     implementation 'com.github.JRJimenezReyes:entrada:1.0.3'
+    
+    // MogoDB Driver
+    implementation 'org.mongodb:mongodb-driver-sync:4.1.1'
+    
+    // Driver MySQL
+    implementation "mysql:mysql-connector-java:8.0.19"
 }
 
 tasks.named('test') {

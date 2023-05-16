@@ -13,16 +13,15 @@ import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Alquiler;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Cliente;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Vehiculo;
 import org.iesalandalus.programacion.alquilervehiculos.vista.Vista;
-import org.iesalandalus.programacion.alquilervehiculos.vista.grafica.VistaGrafica;
 import org.xml.sax.SAXException;
 
 import javafx.stage.Stage;
 
 public class Controlador extends Vista implements IControlador {
     private Modelo modelo;
-    private VistaGrafica vista;
+    private Vista vista;
 
-    public Controlador(Modelo modelo, VistaGrafica vista) {
+    public Controlador(Modelo modelo, Vista vista) {
         if (modelo == null) {
             throw new NullPointerException("ERROR: El modelo no puede ser nulo.");
         }

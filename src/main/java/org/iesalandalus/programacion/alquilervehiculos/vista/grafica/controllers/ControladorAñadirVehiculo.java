@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 public class ControladorAñadirVehiculo {
 
     private IControlador controladorMVC;
-    ObservableList<Vehiculo> vehiculos;
+    private ObservableList<Vehiculo> vehiculos;
     private ObservableList<Vehiculo> obsFiltroVehiculos;
     private String tipoVehiculo;
     private static String busqueda;
@@ -195,11 +195,12 @@ public class ControladorAñadirVehiculo {
             if (tipoVehiculo.equals("Turismo")) {
                 int cilindrada = Integer.parseInt(tfCilindrada.getText());
                 vehiculo = new Turismo(marca, modelo, matricula, cilindrada);
+                System.out.println(vehiculo);
             }
 
             if (tipoVehiculo.equals("Furgoneta")) {
                 int plazas = Integer.parseInt(tfPlazas.getText());
-                int pma = Integer.parseInt(tfPlazas.getText());
+                int pma = Integer.parseInt(tfPma.getText());
                 vehiculo = new Furgoneta(marca, modelo, pma, plazas, matricula);
             }
 
@@ -221,7 +222,7 @@ public class ControladorAñadirVehiculo {
             Dialogos.mostrarDialogoConfirmacion("Insertar Vehiculo", "Vehiculo insertado correctamente");
 
         } catch (Exception e) {
-            Dialogos.mostrarDialogoError("Error insercción vehiculo", e.getMessage());
+            Dialogos.mostrarDialogoError("Error insercciñn vehiculo", e.getMessage());
         }
 
     }

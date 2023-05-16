@@ -6,19 +6,18 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.iesalandalus.programacion.alquilervehiculos.controlador.IControlador;
+import org.iesalandalus.programacion.alquilervehiculos.vista.Vista;
 import org.iesalandalus.programacion.alquilervehiculos.vista.grafica.controllers.ControladorVentanaPrincipal;
 import org.iesalandalus.programacion.alquilervehiculos.vista.grafica.utilities.Dialogos;
 import org.xml.sax.SAXException;
 
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-public class VistaGrafica extends Application {
-    private IControlador controladorMVC;
+public class VistaGrafica extends Vista {
     private static VistaGrafica instancia = null;
 
     public VistaGrafica() {
@@ -57,7 +56,6 @@ public class VistaGrafica extends Application {
     }
 
     public void comenzar() {
-        System.out.println("comenzaos vista grafica");
         launch(this.getClass());
     }
 

@@ -10,14 +10,21 @@ import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Cliente;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Vehiculo;
 import org.iesalandalus.programacion.alquilervehiculos.vista.grafica.utilities.Dialogos;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.util.converter.LocalDateStringConverter;
 
 public class ControladorAñadirAlquiler {
 
@@ -25,12 +32,6 @@ public class ControladorAñadirAlquiler {
 
     @FXML
     private TextField tfFormCliente;
-
-    @FXML
-    private TextField tfFormFechaAlqui;
-
-    @FXML
-    private TextField tfFormFechaDevo;
 
     @FXML
     private TextField tfFormVehiculo;
@@ -47,14 +48,36 @@ public class ControladorAñadirAlquiler {
     @FXML
     private Label lblFechaDevo;
 
+    @FXML
+    private DatePicker dpFechaAlquiler;
+
+    @FXML
+    private DatePicker dpFechaDevo;
+
+    @FXML
+    private ListView<String> lvDniCliente;
+
+    @FXML
+    private ListView<String> lvMatriculaVehiculo;
+
     private IControlador controladorMVC;
-    ObservableList<Alquiler> alquileres;
-    ObservableList<Alquiler> obsFiltroAlquileres;
+    // Observable datos alquileres:
+    private ObservableList<Alquiler> alquileres;
+    // Observable datos busqueda alquileres:
+    private ObservableList<Alquiler> obsFiltroAlquileres;
+    // Observables datos clientes y vehiculos
+    private ObservableList<Cliente> clientes;
+    private ObservableList<Vehiculo> vehiculos;
+
     private static String busquedaDni;
     private static String busquedaMatricula;
 
-    @FXML
-    private void initialize() {
+    public void setClientes(ObservableList<Cliente> clientes) {
+        this.clientes = clientes;
+    }
+
+    public void setVehiculos(ObservableList<Vehiculo> vehiculos) {
+        this.vehiculos = vehiculos;
     }
 
     public void setFiltro(ObservableList<Alquiler> filtro) {
@@ -77,20 +100,74 @@ public class ControladorAñadirAlquiler {
         busquedaMatricula = filtroMatricula;
     }
 
+    @FXML
+    private void initialize() {
+        lvDniCliente.setVisible(false);
+        lvMatriculaVehiculo.setVisible(false);
+        inicializaCalendarioAlquiler();
+    }
+
+    // Insertar dni seleccionado en textfiel dni:
+    @FXML
+    void SeleccionDniAlquiler(MouseEvent event) {
+
+        String dniSeleccionado = lvDniCliente.getSelectionModel().getSelectedItem();
+
+        if (dniSeleccionado != null && !dniSeleccionado.isEmpty()) {
+            tfFormCliente.setText(dniSeleccionado);
+            lvDniCliente.setVisible(false);
+        }
+    }
+
+    // Insertar matricula seleccionada en textfield matricula:
+    @FXML
+    void SeleccionMatriculaAlquiler(MouseEvent event) {
+        String matriculaSeleccionada = lvMatriculaVehiculo.getSelectionModel().getSelectedItem();
+
+        if (matriculaSeleccionada != null && !matriculaSeleccionada.isEmpty()) {
+            tfFormVehiculo.setText(matriculaSeleccionada);
+            lvMatriculaVehiculo.setVisible(false);
+        }
+    }
+
+    private void inicializaCalendarioAlquiler() {
+        dpFechaAlquiler.setConverter(new LocalDateStringConverter(FORMATO_FECHA, null));
+        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
+
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (item.isAfter(LocalDate.now())) {
+                            this.setDisable(true);
+                        }
+                    }
+                };
+            }
+        };
+
+        dpFechaAlquiler.setDayCellFactory(dayCellFactory);
+        dpFechaDevo.setDayCellFactory(dayCellFactory);
+    }
+
     public void cargarDatos(Alquiler alquiler) {
         tfFormCliente.setDisable(true);
         tfFormCliente.setText(alquiler.getCliente().getDni());
         tfFormVehiculo.setDisable(true);
         tfFormVehiculo.setText(alquiler.getVehiculo().getMatricula());
-        tfFormFechaAlqui.setDisable(true);
-        tfFormFechaAlqui.setText(alquiler.getFechaAlquiler().format(FORMATO_FECHA));
+        dpFechaAlquiler.setDisable(true);
+        dpFechaAlquiler.setValue(alquiler.getFechaAlquiler());
     }
 
+    // Activar boton de añadir y desactivar datepicker de fecha devolucion
     public void botonVisible() {
         btnFormAlquilerAñadir.setVisible(true);
         btnFormAlquilerDevolver.setVisible(false);
         lblFechaDevo.setVisible(false);
-        tfFormFechaDevo.setVisible(false);
+        dpFechaDevo.setVisible(false);
     }
 
     @FXML
@@ -107,18 +184,16 @@ public class ControladorAñadirAlquiler {
     void devolver(ActionEvent event) {
         try {
             Alquiler alquiler = new Alquiler(controladorMVC.buscar(Cliente.getClienteConDni(tfFormCliente.getText())),
-                    Vehiculo.getVehiculoConMatricula(tfFormVehiculo.getText()),
-                    LocalDate.parse(tfFormFechaAlqui.getText(), FORMATO_FECHA));
+                    Vehiculo.getVehiculoConMatricula(tfFormVehiculo.getText()), dpFechaAlquiler.getValue());
 
             btnFormAlquilerAñadir.setVisible(false);
             btnFormAlquilerDevolver.setVisible(true);
             lblFechaDevo.setVisible(true);
-            tfFormFechaDevo.setVisible(true);
+            dpFechaDevo.setVisible(true);
 
             alquileres.remove(alquiler);
 
-            controladorMVC.devolver(alquiler.getVehiculo(), LocalDate.parse(tfFormFechaDevo.getText(),
-                    FORMATO_FECHA));
+            controladorMVC.devolver(alquiler.getVehiculo(), dpFechaDevo.getValue());
 
             alquileres.setAll(controladorMVC.getAlquileres());
 
@@ -130,15 +205,69 @@ public class ControladorAñadirAlquiler {
         }
     }
 
+    // Mostrar los dni disponibles para poder realizar un alquiler:
+    @FXML
+    void mostrarListaDni(MouseEvent event) {
+        lvMatriculaVehiculo.setVisible(false);
+        ObservableList<String> listaDni = FXCollections.observableArrayList();
+
+        if (lvDniCliente.getItems().size() == 0) {
+
+            for (Cliente cliente : clientes) {
+                listaDni.add(cliente.getDni());
+            }
+
+            for (Alquiler alquiler : alquileres) {
+                if (alquiler.getFechaDevolucion() == null) {
+                    listaDni.remove(alquiler.getCliente().getDni());
+                }
+            }
+        }
+
+        lvDniCliente.getItems().addAll(listaDni);
+        if (!lvDniCliente.isVisible()) {
+            lvDniCliente.setVisible(true);
+        } else {
+            lvDniCliente.setVisible(false);
+        }
+    }
+
+    // Mostrar las matriculas disponibles para poder realizar un alquiler:
+    @FXML
+    void mostrarListaMatriculas(MouseEvent event) {
+        lvDniCliente.setVisible(false);
+
+        ObservableList<String> listaMatriculas = FXCollections.observableArrayList();
+
+        if (lvMatriculaVehiculo.getItems().size() == 0) {
+            for (Vehiculo vehiculo : vehiculos) {
+                listaMatriculas.add(vehiculo.getMatricula());
+            }
+
+            for (Alquiler alquiler : alquileres) {
+                if (alquiler.getFechaDevolucion() == null) {
+                    listaMatriculas.remove(alquiler.getVehiculo().getMatricula());
+                }
+            }
+        }
+
+        lvMatriculaVehiculo.getItems().addAll(listaMatriculas);
+
+        if (!lvMatriculaVehiculo.isVisible()) {
+            lvMatriculaVehiculo.setVisible(true);
+        } else {
+            lvMatriculaVehiculo.setVisible(false);
+        }
+
+    }
+
+    // Evento para añadir alquiler:
     @FXML
     void anadir(ActionEvent event) {
         try {
             Cliente cliente = controladorMVC.buscar(Cliente.getClienteConDni(tfFormCliente.getText()));
-
             Vehiculo vehiculo = controladorMVC.buscar(Vehiculo.getVehiculoConMatricula(tfFormVehiculo.getText()));
-
-            LocalDate fechaAlquiler = LocalDate.parse(tfFormFechaAlqui.getText(), FORMATO_FECHA);
-
+            LocalDate fechaAlquiler = dpFechaAlquiler.getValue();
             Alquiler alquiler = new Alquiler(cliente, vehiculo, fechaAlquiler);
 
             controladorMVC.insertar(alquiler);

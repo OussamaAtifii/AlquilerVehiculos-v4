@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 public class Vehiculos implements IVehiculos {
     private List<Vehiculo> coleccionVehiculos;
     private static Vehiculos instancia = null;
-    private final String RUTA_FICHERO = "../AlquilerVehiculos-v3/src/datos/vehiculos.xml";
+    private final String RUTA_FICHERO = "../AlquilerVehiculos-v4/src/datos/vehiculos.xml";
     private final String RAIZ = "Vehiculos";
     private final String VEHICULO = "Vehiculo";
     private final String MARCA = "Marca";

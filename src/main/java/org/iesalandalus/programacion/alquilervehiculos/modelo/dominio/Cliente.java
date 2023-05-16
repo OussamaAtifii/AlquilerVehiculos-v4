@@ -40,9 +40,10 @@ public class Cliente {
         if (nombre == null) { // Validar nombre no nulo
             throw new NullPointerException("ERROR: El nombre no puede ser nulo.");
         }
-        if (!nombre.matches(ER_NOMBRE)) { // Validar formato nombre
-            throw new IllegalArgumentException("ERROR: El nombre no tiene un formato válido.");
-        }
+        // if (!nombre.matches(ER_NOMBRE)) { // Validar formato nombre
+        // throw new IllegalArgumentException("ERROR: El nombre no tiene un formato
+        // válido.");
+        // }
         this.nombre = nombre;
     }
 

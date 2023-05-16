@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -51,6 +52,12 @@ public class ControladorAñadirCliente {
     @FXML
     private Button btnModificar;
 
+    private TableView<Cliente> tablaClientes;
+
+    public void setTablaClientes(TableView<Cliente> tablaClientes) {
+        this.tablaClientes = tablaClientes;
+    }
+
     @FXML
     private void initialize() {
     }
@@ -90,6 +97,7 @@ public class ControladorAñadirCliente {
             controladorMVC.modificar(cliente, tfNombre.getText(), tfTelefono.getText());
             clientes.add(cliente);
 
+            tablaClientes.refresh();
             Stage escenario = (Stage) ((Node) event.getSource()).getScene().getWindow();
             escenario.close();
             Dialogos.mostrarDialogoConfirmacion("Modificar cliente", "Cliente modificado correctamente");
@@ -123,7 +131,7 @@ public class ControladorAñadirCliente {
             escenario.close();
             Dialogos.mostrarDialogoConfirmacion("Insertar Cliente", "Cliente insertado correctamente");
         } catch (Exception e) {
-            Dialogos.mostrarDialogoError("Error insercción cliente", e.getMessage());
+            Dialogos.mostrarDialogoError("Error insercci�n cliente", e.getMessage());
         }
     }
 

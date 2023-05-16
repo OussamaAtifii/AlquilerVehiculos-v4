@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 public class Alquileres implements IAlquileres {
     private static List<Alquiler> coleccionAlquileres;
     private static Alquileres instancia;
-    private final String RUTA_FICHERO = "../AlquilerVehiculos-v3/src/datos/alquileres.xml";
+    private final String RUTA_FICHERO = "../AlquilerVehiculos-v4/src/datos/alquileres.xml";
     private final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final String RAIZ = "Alquileres";
     private final String ALQUILER = "Alquiler";
@@ -93,7 +93,7 @@ public class Alquileres implements IAlquileres {
 
         // Comprobar si el alquiler tiene fecha de devolución y devolverlo en caso de
         // que si la tuviera:
-        if (!fechaDevolucion.equals("")) {
+        if (!fechaDevolucion.isBlank()) {
             alquiler.devolver(LocalDate.parse(fechaDevolucion, FORMATO_FECHA));
         }
 
@@ -148,7 +148,8 @@ public class Alquileres implements IAlquileres {
         // Comprobar si fecha devolución es nulo, pasarlo a "" para no tener
         // NullPointerException,
         // en caso contrario, formateamos fecha y pasar a string:
-        String fecha = (alquiler.getFechaDevolucion() == null) ? ""
+        String fecha = (alquiler.getFechaDevolucion() == null)
+                ? ""
                 : alquiler.getFechaDevolucion().format(FORMATO_FECHA).toString();
 
         // Darle valor al elemento fecha devolución y enlazar con el elemento alquiler:

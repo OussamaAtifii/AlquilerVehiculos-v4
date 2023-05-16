@@ -128,8 +128,7 @@ public class ControladorVentanaPrincipal {
     @FXML
     private Button btnAnadirVehiculo;
 
-    // TextFiedl buscar en tabla
-
+    // TextFields busqueda:
     @FXML
     private TextField tfBuscarAlquilerCliente;
 
@@ -142,6 +141,7 @@ public class ControladorVentanaPrincipal {
     @FXML
     private TextField tfBuscarVehiculo;
 
+    // Labels informacion alquiler:
     @FXML
     private Label lblInfoDniCliente;
 
@@ -163,14 +163,14 @@ public class ControladorVentanaPrincipal {
     @FXML
     private Label lblInfoTipoVehiculo;
 
-    // Observables para listar en tablas
+    // Listas para insertar en tablas:
     private ObservableList<Cliente> obsClientes;
-    private ObservableList<Cliente> obsFiltroClientes;
-
     private ObservableList<Vehiculo> obsVehiculos;
-    private ObservableList<Vehiculo> obsFiltroVehiculos;
-
     private ObservableList<Alquiler> obsAlquileres;
+
+    // Listas para filtros de busqueda:
+    private ObservableList<Cliente> obsFiltroClientes;
+    private ObservableList<Vehiculo> obsFiltroVehiculos;
     private ObservableList<Alquiler> obsFiltroAlquileres;
 
     // Controlador
@@ -187,7 +187,7 @@ public class ControladorVentanaPrincipal {
         obsAlquileres = FXCollections.observableArrayList();
         obsFiltroAlquileres = FXCollections.observableArrayList();
 
-        // Añadir datos clientes a tabla:
+        // Al inicializar la app, mostrar datos de los clientes:
         setAtributosClientes();
         // Obtener alquilerse de cliente:
         tvClientes.setOnMouseClicked(e -> verAlquileres(e));
@@ -195,21 +195,247 @@ public class ControladorVentanaPrincipal {
         tvVehiculos.setOnMouseClicked(e -> verAlquileres(e));
     }
 
+    public void setClientes() {
+        obsClientes.setAll(controladorMVC.getClientes());
+    }
+
+    public void setControladorMVC(IControlador controlador) {
+        controladorMVC = controlador;
+    }
+
+    // Insertar datos clientes en tabla:
     @FXML
-    void desactivarBuscarCliente(KeyEvent event) {
-        tfBuscarAlquilerCliente.setDisable(true);
-        tfBuscarAlquilerVehiculo.setDisable(false);
-        if (tfBuscarAlquilerVehiculo.getText().isEmpty()) {
-            tfBuscarAlquilerCliente.setDisable(false);
+    private void setAtributosClientes() {
+        tfBuscarCliente.setVisible(true);
+        tfBuscarVehiculo.setVisible(false);
+        tfBuscarAlquilerCliente.setVisible(false);
+        tfBuscarAlquilerVehiculo.setVisible(false);
+
+        desactivarInfoAlquiler(true);
+        activarBotonAnadir(btnAnadirCliente);
+
+        tcDni.setCellValueFactory(cliente -> new SimpleStringProperty(cliente.getValue().getDni()));
+        tcNombre.setCellValueFactory(cliente -> new SimpleStringProperty(cliente.getValue().getNombre()));
+        tcTelefono.setCellValueFactory(cliente -> new SimpleStringProperty(cliente.getValue().getTelefono()));
+        tvClientes.setItems(obsClientes);
+        obsClientes.setAll(controladorMVC.getClientes());
+
+        activarTabla(tvClientes);
+    }
+
+    // Insertar datos vehiculos en tabla:
+    @FXML
+    void setAtributosVehiculos(ActionEvent event) {
+        tfBuscarCliente.setVisible(false);
+        tfBuscarVehiculo.setVisible(true);
+        tfBuscarAlquilerCliente.setVisible(false);
+        tfBuscarAlquilerVehiculo.setVisible(false);
+
+        desactivarInfoAlquiler(true);
+        activarBotonAnadir(btnAnadirVehiculo);
+
+        tcMarca.setCellValueFactory(new PropertyValueFactory<>("marca"));
+        tcModelo.setCellValueFactory(new PropertyValueFactory<>("modelo"));
+        tcMatricula.setCellValueFactory(new PropertyValueFactory<>("matricula"));
+
+        tcCilindrada.setCellValueFactory(vehiculo -> {
+            if (vehiculo.getValue() instanceof Turismo) {
+                return new SimpleStringProperty(Integer.toString(((Turismo) vehiculo.getValue()).getCilindrada()));
+            }
+            return new SimpleStringProperty("-");
+
+        });
+
+        tcPma.setCellValueFactory(vehiculo -> {
+            if (vehiculo.getValue() instanceof Furgoneta) {
+                return new SimpleStringProperty(Integer.toString(((Furgoneta) vehiculo.getValue()).getPma()));
+            }
+            return new SimpleStringProperty("-");
+        });
+
+        tcPlazas.setCellValueFactory(vehiculo -> {
+            if (vehiculo.getValue() instanceof Furgoneta) {
+                return new SimpleStringProperty(Integer.toString(((Furgoneta) vehiculo.getValue()).getPlazas()));
+            } else if (vehiculo.getValue() instanceof Autobus) {
+                return new SimpleStringProperty(Integer.toString(((Autobus) vehiculo.getValue()).getPlazas()));
+            }
+            return new SimpleStringProperty("-");
+        });
+
+        tvVehiculos.setItems(obsVehiculos);
+        obsVehiculos.setAll(controladorMVC.getVehiculos());
+
+        activarTabla(tvVehiculos);
+    }
+
+    // Insertar datos alquileres en tabla
+    @FXML
+    void setAtributosAlquileres(ActionEvent event) {
+        desactivarInfoAlquiler(false);
+
+        tfBuscarCliente.setVisible(false);
+        tfBuscarVehiculo.setVisible(false);
+        tfBuscarAlquilerCliente.setVisible(true);
+        tfBuscarAlquilerVehiculo.setVisible(true);
+        activarBotonAnadir(btnAnadirAlquiler);
+
+        tcCliente.setCellValueFactory(alquiler -> new SimpleStringProperty(alquiler.getValue().getCliente().getDni()));
+
+        tcVehiculo.setCellValueFactory(
+                alquiler -> new SimpleStringProperty(alquiler.getValue().getVehiculo().getMatricula()));
+
+        tcFechaAlqui.setCellValueFactory(
+                alquiler -> new SimpleStringProperty(alquiler.getValue().getFechaAlquiler().format(FORMATO_FECHA)));
+
+        tcFechaDevo.setCellValueFactory(alquiler -> {
+            if (alquiler.getValue().getFechaDevolucion() == null) {
+                return new SimpleStringProperty("-");
+            }
+            return new SimpleStringProperty(alquiler.getValue().getFechaDevolucion().format(FORMATO_FECHA));
+        });
+
+        tvAlquileres.setItems(obsAlquileres);
+        obsAlquileres.setAll(controladorMVC.getAlquileres());
+
+        activarTabla(tvAlquileres);
+    }
+
+    // Formulario añadir cliente:
+    @FXML
+    void anadirCliente(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            ControladorAñadirCliente controlador = new ControladorAñadirCliente();
+            loader.setController(controlador);
+            loader.setLocation(getClass().getResource("../views/formularioCliente.fxml"));
+            Parent raiz = loader.load();
+            controlador = loader.getController();
+            controlador.setControladorMVC(controladorMVC);
+            controlador.setClientes(obsClientes);
+            controlador.setFiltro(obsFiltroClientes);
+            controlador.botonVisible();
+            Scene escena = new Scene(raiz);
+            Stage escenario = new Stage();
+            escenario.setOnCloseRequest(e -> confirmarSalida(escenario, e));
+            escenario.initModality(Modality.APPLICATION_MODAL);
+            escenario.setScene(escena);
+            escenario.setResizable(false);
+            escenario.setTitle("Insertar cliente");
+            escenario.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Formulario añadir vehiculo
+    @FXML
+    void anadirVehiculo(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            ControladorAñadirVehiculo controlador = new ControladorAñadirVehiculo();
+            loader.setController(controlador);
+            loader.setLocation(getClass().getResource("../views/formularioVehiculo.fxml"));
+            Parent raiz = loader.load();
+            controlador = loader.getController();
+            controlador.setControladorMVC(controladorMVC);
+            controlador.setFiltro(obsFiltroVehiculos);
+            controlador.setVehiculos(obsVehiculos);
+            Scene escena = new Scene(raiz);
+            Stage escenario = new Stage();
+            escenario.setOnCloseRequest(e -> confirmarSalida(escenario, e));
+            escenario.initModality(Modality.APPLICATION_MODAL);
+            escenario.setScene(escena);
+            escenario.setResizable(false);
+            escenario.setTitle("Insertar vehiculo");
+            escenario.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Formulario añadir alquiler:
+    @FXML
+    void anadirAlquiler(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            ControladorAñadirAlquiler controlador = new ControladorAñadirAlquiler();
+            loader.setController(controlador);
+            loader.setLocation(getClass().getResource("../views/formularioAlquileres.fxml"));
+            Parent raiz = loader.load();
+            controlador = loader.getController();
+            controlador.setControladorMVC(controladorMVC);
+            controlador.setAlquileres(obsAlquileres);
+            controlador.setFiltro(obsFiltroAlquileres);
+            controlador.setClientes(obsClientes);
+            controlador.setVehiculos(obsVehiculos);
+            controlador.botonVisible();
+            Scene escena = new Scene(raiz);
+            Stage escenario = new Stage();
+            escenario.setOnCloseRequest(e -> confirmarSalida(escenario, e));
+            escenario.initModality(Modality.APPLICATION_MODAL);
+            escenario.setScene(escena);
+            escenario.setResizable(false);
+            escenario.setTitle("Insertar alquiler");
+            escenario.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @FXML
-    void desactivarBuscarVehiculo(KeyEvent event) {
-        tfBuscarAlquilerCliente.setDisable(false);
-        tfBuscarAlquilerVehiculo.setDisable(true);
-        if (tfBuscarAlquilerCliente.getText().isEmpty()) {
-            tfBuscarAlquilerVehiculo.setDisable(false);
+    void eliminarCliente(ActionEvent event) {
+        Cliente cliente = tvClientes.getSelectionModel().getSelectedItem();
+
+        // Confirmar y borrar cliente:
+        if (cliente != null
+                && Dialogos.mostrarDialogoConfirmacion("Borrar", "ñEstñs seguro de querer borrar el cliente?")) {
+            try {
+                controladorMVC.borrar(cliente);
+                obsClientes.remove(cliente);
+                obsFiltroClientes.remove(cliente);
+                Dialogos.mostrarDialogoInformacion("Borrar Cliente", "Cliente borrado correctamente");
+
+            } catch (Exception e) {
+                Dialogos.mostrarDialogoError("Borrar Cliente", e.getMessage());
+            }
+        }
+
+    }
+
+    @FXML
+    void eliminarVehiculo(ActionEvent event) {
+        Vehiculo vehiculo = tvVehiculos.getSelectionModel().getSelectedItem();
+
+        // Confirmar y borrar vehiculo:
+        if (vehiculo != null
+                && Dialogos.mostrarDialogoConfirmacion("Borrar", "ñEstñs seguro de querer borrar el vehiculo?")) {
+            try {
+                controladorMVC.borrar(vehiculo);
+                obsVehiculos.remove(vehiculo);
+                obsFiltroVehiculos.remove(vehiculo);
+                Dialogos.mostrarDialogoInformacion("Borrar Vehiculo", "Vehiculo borrado correctamente");
+            } catch (Exception e) {
+                Dialogos.mostrarDialogoError("Borrar Vehiculo", e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    void eliminarAlquiler(ActionEvent event) {
+        Alquiler alquiler = tvAlquileres.getSelectionModel().getSelectedItem();
+
+        // Confirmar y borrar vehiculo:
+        if (alquiler != null
+                && Dialogos.mostrarDialogoConfirmacion("Borrar", "ñEstñs seguro de querer borrar el alquiler?")) {
+            try {
+                controladorMVC.borrar(alquiler);
+                obsAlquileres.remove(alquiler);
+                obsFiltroAlquileres.remove(alquiler);
+                Dialogos.mostrarDialogoInformacion("Borrar alquiler", "Alquiler borrado correctamente");
+            } catch (Exception e) {
+                Dialogos.mostrarDialogoError("Borrar alquiler", e.getMessage());
+            }
         }
     }
 
@@ -229,16 +455,6 @@ public class ControladorVentanaPrincipal {
             }
             tvClientes.setItems(obsFiltroClientes);
         }
-    }
-
-    private void desactivarInfoAlquiler() {
-        lblInfoDniCliente.setVisible(false);
-        lblInfoMarcaVehiculo.setVisible(false);
-        lblInfoMatriculaVehiculo.setVisible(false);
-        lblInfoModeloVehiculo.setVisible(false);
-        lblInfoNombreCliente.setVisible(false);
-        lblInfoPrecioAlquiler.setVisible(false);
-        lblInfoTipoVehiculo.setVisible(false);
     }
 
     @FXML
@@ -288,149 +504,6 @@ public class ControladorVentanaPrincipal {
             tvAlquileres.setItems(obsFiltroAlquileres);
 
         }
-
-    }
-
-    // Insertar datos clientes en tabla:
-    @FXML
-    void setAtributosClientes() {
-        tfBuscarCliente.setVisible(true);
-        tfBuscarVehiculo.setVisible(false);
-        tfBuscarAlquilerCliente.setVisible(false);
-        tfBuscarAlquilerVehiculo.setVisible(false);
-
-        desactivarInfoAlquiler();
-        activarBotonAnadir(btnAnadirCliente);
-
-        tcDni.setCellValueFactory(cliente -> new SimpleStringProperty(cliente.getValue().getDni()));
-        tcNombre.setCellValueFactory(cliente -> new SimpleStringProperty(cliente.getValue().getNombre()));
-        tcTelefono.setCellValueFactory(cliente -> new SimpleStringProperty(cliente.getValue().getTelefono()));
-        tvClientes.setItems(obsClientes);
-        obsClientes.setAll(controladorMVC.getClientes());
-
-        activarTabla(tvClientes);
-    }
-
-    // Insertar datos vehiculos en tabla:
-    @FXML
-    void setAtributosVehiculos(ActionEvent event) {
-        tfBuscarCliente.setVisible(false);
-        tfBuscarVehiculo.setVisible(true);
-        tfBuscarAlquilerCliente.setVisible(false);
-        tfBuscarAlquilerVehiculo.setVisible(false);
-
-        desactivarInfoAlquiler();
-        activarBotonAnadir(btnAnadirVehiculo);
-
-        tcMarca.setCellValueFactory(new PropertyValueFactory<>("marca"));
-        tcModelo.setCellValueFactory(new PropertyValueFactory<>("modelo"));
-        tcMatricula.setCellValueFactory(new PropertyValueFactory<>("matricula"));
-
-        tcCilindrada.setCellValueFactory(vehiculo -> {
-            return vehiculo.getValue() instanceof Turismo
-                    ? new SimpleStringProperty(Integer.toString(((Turismo) vehiculo.getValue()).getCilindrada()))
-                    : new SimpleStringProperty("-");
-        });
-
-        tcPma.setCellValueFactory(vehiculo -> {
-            return vehiculo.getValue() instanceof Furgoneta
-                    ? new SimpleStringProperty(Integer.toString(((Furgoneta) vehiculo.getValue()).getPma()))
-                    : new SimpleStringProperty("-");
-        });
-
-        tcPlazas.setCellValueFactory(vehiculo -> {
-            if (vehiculo.getValue() instanceof Furgoneta) {
-                return new SimpleStringProperty(Integer.toString(((Furgoneta) vehiculo.getValue()).getPlazas()));
-            } else if (vehiculo.getValue() instanceof Autobus) {
-                return new SimpleStringProperty(Integer.toString(((Autobus) vehiculo.getValue()).getPlazas()));
-            }
-            return new SimpleStringProperty("-");
-        });
-
-        tvVehiculos.setItems(obsVehiculos);
-        obsVehiculos.setAll(controladorMVC.getVehiculos());
-
-        activarTabla(tvVehiculos);
-    }
-
-    // Insertar datos alquileres en tabla
-    @FXML
-    void setAtributosAlquileres(ActionEvent event) {
-        lblInfoDniCliente.setVisible(true);
-        lblInfoMarcaVehiculo.setVisible(true);
-        lblInfoMatriculaVehiculo.setVisible(true);
-        lblInfoModeloVehiculo.setVisible(true);
-        lblInfoNombreCliente.setVisible(true);
-        lblInfoPrecioAlquiler.setVisible(true);
-        lblInfoTipoVehiculo.setVisible(true);
-
-        tfBuscarCliente.setVisible(false);
-        tfBuscarVehiculo.setVisible(false);
-        tfBuscarAlquilerCliente.setVisible(true);
-        tfBuscarAlquilerVehiculo.setVisible(true);
-        activarBotonAnadir(btnAnadirAlquiler);
-
-        tcCliente.setCellValueFactory(alquiler -> new SimpleStringProperty(alquiler.getValue().getCliente().getDni()));
-
-        tcVehiculo.setCellValueFactory(
-                alquiler -> new SimpleStringProperty(alquiler.getValue().getVehiculo().getMatricula()));
-
-        tcFechaAlqui.setCellValueFactory(
-                alquiler -> new SimpleStringProperty(alquiler.getValue().getFechaAlquiler().format(FORMATO_FECHA)));
-
-        tcFechaDevo.setCellValueFactory(
-                alquiler -> {
-                    return alquiler.getValue().getFechaDevolucion() != null
-                            ? new SimpleStringProperty(alquiler.getValue().getFechaDevolucion().format(FORMATO_FECHA))
-                            : new SimpleStringProperty("-");
-                });
-
-        tvAlquileres.setItems(obsAlquileres);
-        obsAlquileres.setAll(controladorMVC.getAlquileres());
-        activarTabla(tvAlquileres);
-    }
-
-    // Activar el boton añadir pasado por parametro y desactivar los demas:
-    private void activarBotonAnadir(Button button) {
-
-        if (button.equals(btnAnadirCliente)) {
-            btnAnadirCliente.setVisible(true);
-            btnAnadirVehiculo.setVisible(false);
-            btnAnadirAlquiler.setVisible(false);
-            tvAlquileresSecundario.setVisible(true);
-        }
-        if (button.equals(btnAnadirVehiculo)) {
-            btnAnadirCliente.setVisible(false);
-            btnAnadirVehiculo.setVisible(true);
-            btnAnadirAlquiler.setVisible(false);
-            tvAlquileresSecundario.setVisible(true);
-        }
-        if (button.equals(btnAnadirAlquiler)) {
-            btnAnadirCliente.setVisible(false);
-            btnAnadirVehiculo.setVisible(false);
-            btnAnadirAlquiler.setVisible(true);
-            tvAlquileresSecundario.setVisible(false);
-        }
-    }
-
-    // Activar la tabla pasada por parametro y desactivar las demas:
-    private void activarTabla(TableView<?> tabla) {
-
-        if (tabla.equals(tvClientes)) {
-            tvClientes.setVisible(true);
-            tvVehiculos.setVisible(false);
-            tvAlquileres.setVisible(false);
-        }
-        if (tabla.equals(tvVehiculos)) {
-            tvClientes.setVisible(false);
-            tvVehiculos.setVisible(true);
-            tvAlquileres.setVisible(false);
-        }
-        if (tabla.equals(tvAlquileres)) {
-            tvClientes.setVisible(false);
-            tvVehiculos.setVisible(false);
-            tvAlquileres.setVisible(true);
-        }
     }
 
     // Modificar cliente seleccionado:
@@ -448,6 +521,7 @@ public class ControladorVentanaPrincipal {
                 controlador = loader.getController();
                 controlador.setControladorMVC(controladorMVC);
                 controlador.setClientes(obsClientes);
+                controlador.setTablaClientes(tvClientes);
                 Scene escena = new Scene(raiz);
                 controlador.cargarDatos(cliente);
                 Stage escenario = new Stage();
@@ -498,106 +572,94 @@ public class ControladorVentanaPrincipal {
         }
     }
 
+    @FXML
+    void desactivarBuscarCliente(KeyEvent event) {
+        tfBuscarAlquilerCliente.setDisable(true);
+        tfBuscarAlquilerVehiculo.setDisable(false);
+        if (tfBuscarAlquilerVehiculo.getText().isEmpty()) {
+            tfBuscarAlquilerCliente.setDisable(false);
+        }
+    }
+
+    @FXML
+    void desactivarBuscarVehiculo(KeyEvent event) {
+        tfBuscarAlquilerCliente.setDisable(false);
+        tfBuscarAlquilerVehiculo.setDisable(true);
+        if (tfBuscarAlquilerCliente.getText().isEmpty()) {
+            tfBuscarAlquilerVehiculo.setDisable(false);
+        }
+    }
+
+    private void desactivarInfoAlquiler(Boolean desactivar) {
+        if (desactivar) {
+            lblInfoDniCliente.setVisible(false);
+            lblInfoMarcaVehiculo.setVisible(false);
+            lblInfoMatriculaVehiculo.setVisible(false);
+            lblInfoModeloVehiculo.setVisible(false);
+            lblInfoNombreCliente.setVisible(false);
+            lblInfoPrecioAlquiler.setVisible(false);
+            lblInfoTipoVehiculo.setVisible(false);
+        } else {
+            lblInfoDniCliente.setVisible(true);
+            lblInfoMarcaVehiculo.setVisible(true);
+            lblInfoMatriculaVehiculo.setVisible(true);
+            lblInfoModeloVehiculo.setVisible(true);
+            lblInfoNombreCliente.setVisible(true);
+            lblInfoPrecioAlquiler.setVisible(true);
+            lblInfoTipoVehiculo.setVisible(true);
+
+        }
+    }
+
+    // Activar el boton añadir pasado por parametro y desactivar los demas:
+    private void activarBotonAnadir(Button button) {
+
+        if (button.equals(btnAnadirCliente)) {
+            btnAnadirCliente.setVisible(true);
+            btnAnadirVehiculo.setVisible(false);
+            btnAnadirAlquiler.setVisible(false);
+            tvAlquileresSecundario.setVisible(true);
+        }
+        if (button.equals(btnAnadirVehiculo)) {
+            btnAnadirCliente.setVisible(false);
+            btnAnadirVehiculo.setVisible(true);
+            btnAnadirAlquiler.setVisible(false);
+            tvAlquileresSecundario.setVisible(true);
+        }
+        if (button.equals(btnAnadirAlquiler)) {
+            btnAnadirCliente.setVisible(false);
+            btnAnadirVehiculo.setVisible(false);
+            btnAnadirAlquiler.setVisible(true);
+            tvAlquileresSecundario.setVisible(false);
+        }
+    }
+
+    // Activar la tabla pasada por parametro y desactivar las demas:
+    private void activarTabla(TableView<?> tabla) {
+
+        if (tabla.equals(tvClientes)) {
+            tvClientes.setVisible(true);
+            tvVehiculos.setVisible(false);
+            tvAlquileres.setVisible(false);
+        }
+        if (tabla.equals(tvVehiculos)) {
+            tvClientes.setVisible(false);
+            tvVehiculos.setVisible(true);
+            tvAlquileres.setVisible(false);
+        }
+        if (tabla.equals(tvAlquileres)) {
+            tvClientes.setVisible(false);
+            tvVehiculos.setVisible(false);
+            tvAlquileres.setVisible(true);
+        }
+    }
+
     private void confirmarSalida(Stage escenarioPrincipal, WindowEvent event) {
-        if (Dialogos.mostrarDialogoConfirmacion("Salir", "¿Estás seguro de que quieres salir de la aplicación?",
+        if (Dialogos.mostrarDialogoConfirmacion("Salir", "¿Estas seguro de que quieres salir de la aplicacion?",
                 escenarioPrincipal)) {
-            try {
-                this.controladorMVC.terminar();
-                escenarioPrincipal.close();
-            } catch (Exception e) {
-                Dialogos.mostrarDialogoError("Error", e.getMessage());
-            }
+            escenarioPrincipal.close();
         } else
             event.consume();
-    }
-
-    // Formulario añadir cliente:
-    @FXML
-    void anadirCliente(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            ControladorAñadirCliente controlador = new ControladorAñadirCliente();
-            loader.setController(controlador);
-            loader.setLocation(getClass().getResource("../views/formularioCliente.fxml"));
-            Parent raiz = loader.load();
-            controlador = loader.getController();
-            controlador.setControladorMVC(controladorMVC);
-            controlador.setClientes(obsClientes);
-            controlador.setFiltro(obsFiltroClientes);
-            controlador.botonVisible();
-            Scene escena = new Scene(raiz);
-            Stage escenario = new Stage();
-            escenario.setOnCloseRequest(e -> confirmarSalida(escenario, e));
-            escenario.initModality(Modality.APPLICATION_MODAL);
-            escenario.setScene(escena);
-            escenario.setResizable(false);
-            escenario.setTitle("Insertar cliente");
-            escenario.showAndWait();
-
-            for (Cliente cliente : controlador.getObsClientes()) {
-                if (cliente.getNombre().toLowerCase().contains(tfBuscarCliente.getText().toLowerCase())) {
-                    obsFiltroClientes.add(cliente);
-                }
-                tvClientes.refresh();
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Formulario añadir vehiculo
-    @FXML
-    void anadirVehiculo(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            ControladorAñadirVehiculo controlador = new ControladorAñadirVehiculo();
-            loader.setController(controlador);
-            loader.setLocation(getClass().getResource("../views/formularioVehiculo.fxml"));
-            Parent raiz = loader.load();
-            controlador = loader.getController();
-            controlador.setControladorMVC(controladorMVC);
-            controlador.setFiltro(obsFiltroVehiculos);
-            controlador.setVehiculos(obsVehiculos);
-            Scene escena = new Scene(raiz);
-            Stage escenario = new Stage();
-            escenario.setOnCloseRequest(e -> confirmarSalida(escenario, e));
-            escenario.initModality(Modality.APPLICATION_MODAL);
-            escenario.setScene(escena);
-            escenario.setResizable(false);
-            escenario.setTitle("Insertar vehiculo");
-            escenario.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Formulario añadir alquiler:
-    @FXML
-    void anadirAlquiler(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            ControladorAñadirAlquiler controlador = new ControladorAñadirAlquiler();
-            loader.setController(controlador);
-            loader.setLocation(getClass().getResource("../views/formularioAlquileres.fxml"));
-            Parent raiz = loader.load();
-            controlador = loader.getController();
-            controlador.setControladorMVC(controladorMVC);
-            controlador.setAlquileres(obsAlquileres);
-            controlador.setFiltro(obsFiltroAlquileres);
-            controlador.botonVisible();
-            Scene escena = new Scene(raiz);
-            Stage escenario = new Stage();
-            escenario.setOnCloseRequest(e -> confirmarSalida(escenario, e));
-            escenario.initModality(Modality.APPLICATION_MODAL);
-            escenario.setScene(escena);
-            escenario.setResizable(false);
-            escenario.setTitle("Insertar alquiler");
-            escenario.showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML
@@ -616,66 +678,10 @@ public class ControladorVentanaPrincipal {
             if (alquiler.getPrecio() != 0) {
                 lblInfoPrecioAlquiler.setText("Precio: " + alquiler.getPrecio() + "€");
             } else {
-                lblInfoPrecioAlquiler.setText("Alquiler aún no devuelto");
+                lblInfoPrecioAlquiler.setText("Alquiler aun no devuelto");
             }
         }
 
-    }
-
-    @FXML
-    void eliminarCliente(ActionEvent event) {
-        Cliente cliente = tvClientes.getSelectionModel().getSelectedItem();
-
-        // Confirmar y borrar cliente:
-        if (cliente != null
-                && Dialogos.mostrarDialogoConfirmacion("Borrar", "¿Estás seguro de querer borrar el cliente?")) {
-            try {
-                controladorMVC.borrar(cliente);
-                obsClientes.remove(cliente);
-                obsFiltroClientes.remove(cliente);
-                Dialogos.mostrarDialogoInformacion("Borrar Cliente", "Cliente borrado correctamente");
-
-            } catch (Exception e) {
-                Dialogos.mostrarDialogoError("Borrar Cliente", e.getMessage());
-            }
-        }
-
-    }
-
-    @FXML
-    void eliminarVehiculo(ActionEvent event) {
-        Vehiculo vehiculo = tvVehiculos.getSelectionModel().getSelectedItem();
-
-        // Confirmar y borrar vehiculo:
-        if (vehiculo != null
-                && Dialogos.mostrarDialogoConfirmacion("Borrar", "¿Estás seguro de querer borrar el vehiculo?")) {
-            try {
-                controladorMVC.borrar(vehiculo);
-                obsVehiculos.remove(vehiculo);
-                obsFiltroVehiculos.remove(vehiculo);
-                Dialogos.mostrarDialogoInformacion("Borrar Vehiculo", "Vehiculo borrado correctamente");
-            } catch (Exception e) {
-                Dialogos.mostrarDialogoError("Borrar Vehiculo", e.getMessage());
-            }
-        }
-    }
-
-    @FXML
-    void eliminarAlquiler(ActionEvent event) {
-        Alquiler alquiler = tvAlquileres.getSelectionModel().getSelectedItem();
-
-        // Confirmar y borrar vehiculo:
-        if (alquiler != null
-                && Dialogos.mostrarDialogoConfirmacion("Borrar", "¿Estás seguro de querer borrar el alquiler?")) {
-            try {
-                controladorMVC.borrar(alquiler);
-                obsAlquileres.remove(alquiler);
-                obsFiltroAlquileres.remove(alquiler);
-                Dialogos.mostrarDialogoInformacion("Borrar alquiler", "Alquiler borrado correctamente");
-            } catch (Exception e) {
-                Dialogos.mostrarDialogoError("Borrar alquiler", e.getMessage());
-            }
-        }
     }
 
     public void verAlquileres(MouseEvent event) {
@@ -730,14 +736,6 @@ public class ControladorVentanaPrincipal {
         } catch (TransformerException | ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setClientes() {
-        obsClientes.setAll(controladorMVC.getClientes());
-    }
-
-    public void setControladorMVC(IControlador controlador) {
-        controladorMVC = controlador;
     }
 
 }

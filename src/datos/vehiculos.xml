@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Vehiculos>
-
+    <Vehiculo Matricula="2232HJG" Tipo="Turismo">
+        <Marca>Ford</Marca>
+        <Modelo>Mondeo</Modelo>
+        <Turismo>
+            <Cilindrada>1500</Cilindrada>
+        </Turismo>
+    </Vehiculo>
 </Vehiculos>

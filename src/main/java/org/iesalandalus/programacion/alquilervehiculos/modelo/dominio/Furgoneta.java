@@ -35,7 +35,7 @@ public class Furgoneta extends Vehiculo {
 
     private void setPma(int pma) {
         if (pma <= 0 ) {
-            throw new IllegalArgumentException("ERROR: El peso máximo autorizado no puede ser negativo.");
+            throw new IllegalArgumentException("ERROR: El peso maximo autorizado no puede ser negativo.");
         }
         this.pma = pma;
     }
@@ -46,7 +46,7 @@ public class Furgoneta extends Vehiculo {
 
     @Override
     public String toString() {
-        return "? " + getMarca() + " " + getModelo() + " - Peso máximo autorizado: " + pma + " - (" + plazas + " plazas) - " + getMatricula();
+        return "? " + getMarca() + " " + getModelo() + " - Peso maximo autorizado: " + pma + " - (" + plazas + " plazas) - " + getMatricula();
     }
 
     @Override

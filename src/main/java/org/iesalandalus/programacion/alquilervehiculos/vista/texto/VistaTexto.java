@@ -43,7 +43,7 @@ public class VistaTexto extends Vista {
     public void terminar() {
         System.out.println("Vista finalizada.");
         try {
-            controlador.terminar();
+            controladorMVC.terminar();
         } catch (ParserConfigurationException e) {
             System.out.println("ERROR: Error en la construcción del lector.");
         } catch (SAXException e) {
@@ -82,7 +82,7 @@ public class VistaTexto extends Vista {
     protected void insertarCliente() {
         Consola.mostrarCabecera("Insertar cliente");
         try {
-            controlador.insertar(Consola.leerCliente());
+            controladorMVC.insertar(Consola.leerCliente());
             System.out.println("------------------------------------");
             System.out.println("? - Cliente insertado correctamente");
             System.out.println("------------------------------------\n");
@@ -94,7 +94,7 @@ public class VistaTexto extends Vista {
     protected void insertarVehiculo() {
         Consola.mostrarCabecera("Insertar vehiculo");
         try {
-            controlador.insertar(Consola.leerVehiculo());
+            controladorMVC.insertar(Consola.leerVehiculo());
             System.out.println("-------------------------------------");
             System.out.println("? - Vehiculo insertado correctamente");
             System.out.println("-------------------------------------\n");
@@ -106,7 +106,7 @@ public class VistaTexto extends Vista {
     protected void insertarAlquiler() {
         Consola.mostrarCabecera("Insertar alquiler");
         try {
-            controlador.insertar(Consola.leerAlquiler());
+            controladorMVC.insertar(Consola.leerAlquiler());
             System.out.println("-------------------------------------");
             System.out.println("? - Alquiler insertado correctamente");
             System.out.println("-------------------------------------\n");
@@ -119,7 +119,7 @@ public class VistaTexto extends Vista {
         Consola.mostrarCabecera("Buscar cliente");
 
         try {
-            Cliente cliente = controlador.buscar(Consola.leerClienteDni());
+            Cliente cliente = controladorMVC.buscar(Consola.leerClienteDni());
 
             if (cliente != null) {
                 System.out.println(cliente + "\n");
@@ -137,7 +137,7 @@ public class VistaTexto extends Vista {
     protected void buscarVehiculo() {
         Consola.mostrarCabecera("Buscar vehiculo");
         try {
-            Vehiculo vehiculo = controlador.buscar(Consola.leerVehiculoMatricula());
+            Vehiculo vehiculo = controladorMVC.buscar(Consola.leerVehiculoMatricula());
 
             if (vehiculo != null) {
                 System.out.println(vehiculo + "\n");
@@ -154,7 +154,7 @@ public class VistaTexto extends Vista {
     protected void buscarAlquiler() {
         Consola.mostrarCabecera("Buscar alquiler");
         try {
-            Alquiler alquiler = controlador.buscar(Consola.leerAlquiler());
+            Alquiler alquiler = controladorMVC.buscar(Consola.leerAlquiler());
 
             if (alquiler != null) {
                 System.out.println(alquiler + "\n");
@@ -171,7 +171,7 @@ public class VistaTexto extends Vista {
     protected void modificarCliente() {
         Consola.mostrarCabecera("Modificar cliente");
         try {
-            controlador.modificar(Consola.leerClienteDni(), Consola.leerNombre(), Consola.leerTelefono());
+            controladorMVC.modificar(Consola.leerClienteDni(), Consola.leerNombre(), Consola.leerTelefono());
             System.out.println("-------------------------------------");
             System.out.println("? - Cliente modificado correctamente");
             System.out.println("-------------------------------------\n");
@@ -183,7 +183,7 @@ public class VistaTexto extends Vista {
     protected void devolverAlquilerCliente() {
         Consola.mostrarCabecera("Devolver alquiler de cliente:");
         try {
-            controlador.devolver(Consola.leerClienteDni(), Consola.leerFechaDevolucion());
+            controladorMVC.devolver(Consola.leerClienteDni(), Consola.leerFechaDevolucion());
             System.out.println("------------------------------------");
             System.out.println("? - Alquiler devuelto correctamente");
             System.out.println("------------------------------------\n");
@@ -195,7 +195,7 @@ public class VistaTexto extends Vista {
     protected void devolverAlquilerVehiculo() {
         Consola.mostrarCabecera("Devolver alquiler de cliente:");
         try {
-            controlador.devolver(Consola.leerVehiculoMatricula(), Consola.leerFechaDevolucion());
+            controladorMVC.devolver(Consola.leerVehiculoMatricula(), Consola.leerFechaDevolucion());
             System.out.println("------------------------------------");
             System.out.println("? - Alquiler devuelto correctamente");
             System.out.println("------------------------------------\n");
@@ -207,7 +207,7 @@ public class VistaTexto extends Vista {
     protected void borrarCliente() {
         Consola.mostrarCabecera("Borrar cliente");
         try {
-            controlador.borrar(Consola.leerClienteDni());
+            controladorMVC.borrar(Consola.leerClienteDni());
             System.out.println("----------------------------------");
             System.out.println("? - Cliente borrado correctamente");
             System.out.println("----------------------------------\n");
@@ -219,7 +219,7 @@ public class VistaTexto extends Vista {
     protected void borrarVehiculo() {
         Consola.mostrarCabecera("Borrar vehiculo");
         try {
-            controlador.borrar(Consola.leerVehiculoMatricula());
+            controladorMVC.borrar(Consola.leerVehiculoMatricula());
             System.out.println("-----------------------------------");
             System.out.println("? - Vehiculo borrado correctamente");
             System.out.println("-----------------------------------\n");
@@ -231,7 +231,7 @@ public class VistaTexto extends Vista {
     protected void borrarAlquiler() {
         Consola.mostrarCabecera("Borrar alquiler");
         try {
-            controlador.borrar(Consola.leerAlquiler());
+            controladorMVC.borrar(Consola.leerAlquiler());
             System.out.println("-----------------------------------");
             System.out.println("? - Alquiler borrado correctamente");
             System.out.println("-----------------------------------\n");
@@ -245,7 +245,7 @@ public class VistaTexto extends Vista {
         List<Cliente> clientes = null;
 
         try {
-            clientes = controlador.getClientes();
+            clientes = controladorMVC.getClientes();
         } catch (NullPointerException | IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
@@ -269,7 +269,7 @@ public class VistaTexto extends Vista {
         List<Vehiculo> vehiculos = null;
 
         try {
-            vehiculos = controlador.getVehiculos();
+            vehiculos = controladorMVC.getVehiculos();
         } catch (NullPointerException | IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
@@ -294,7 +294,7 @@ public class VistaTexto extends Vista {
         List<Alquiler> alquileres = null;
 
         try {
-            alquileres = controlador.getAlquileres();
+            alquileres = controladorMVC.getAlquileres();
         } catch (NullPointerException | IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
@@ -320,7 +320,7 @@ public class VistaTexto extends Vista {
         List<Alquiler> alquileres = null;
 
         try {
-            alquileres = controlador.getAlquileres(Consola.leerClienteDni());
+            alquileres = controladorMVC.getAlquileres(Consola.leerClienteDni());
         } catch (NullPointerException | IllegalArgumentException e) {
             System.out.println();
             System.out.println(e.getMessage());
@@ -343,7 +343,7 @@ public class VistaTexto extends Vista {
         List<Alquiler> alquileres = null;
 
         try {
-            alquileres = controlador.getAlquileres(Consola.leerVehiculoMatricula());
+            alquileres = controladorMVC.getAlquileres(Consola.leerVehiculoMatricula());
         } catch (NullPointerException | IllegalArgumentException e) {
             System.out.println();
             System.out.println(e.getMessage());
@@ -366,7 +366,7 @@ public class VistaTexto extends Vista {
         Map<TipoVehiculo, Integer> mapaEstadisticas = inicializarEstadisticas();
         TipoVehiculo[] tipoVehiculos = TipoVehiculo.values();
 
-        List<Alquiler> alquileres = controlador.getAlquileres();
+        List<Alquiler> alquileres = controladorMVC.getAlquileres();
 
         for (Alquiler alquiler : alquileres) {
             if (alquiler.getFechaAlquiler().getMonth() == mes) {

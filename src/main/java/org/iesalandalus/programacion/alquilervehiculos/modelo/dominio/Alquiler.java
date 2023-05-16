@@ -91,8 +91,10 @@ public class Alquiler {
          * no es anterior a fecha alquiler
          */
         if (fechaDevolucion != null) {
-            if (fechaDevolucion.equals(fechaAlquiler) || fechaDevolucion.isBefore(fechaAlquiler)) {
-                throw new IllegalArgumentException("ERROR: La fecha de devolución debe ser posterior a la fecha de alquiler.");
+            if (fechaDevolucion.equals(fechaAlquiler) ||
+                    fechaDevolucion.isBefore(fechaAlquiler)) {
+                throw new IllegalArgumentException(
+                        "ERROR: La fecha de devolución debe ser posterior a la fecha de alquiler.");
             }
             if (fechaDevolucion.isAfter(LocalDate.now())) { // Validar fecha alquiler no posterior hoy
                 throw new IllegalArgumentException("ERROR: La fecha de devolución no puede ser futura.");

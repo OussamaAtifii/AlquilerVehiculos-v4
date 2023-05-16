@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 public class Clientes implements IClientes {
     private static List<Cliente> coleccionClientes;
     private static Clientes instancia;
-    private final String RUTA_FICHERO = "../AlquilerVehiculos-v3/src/datos/clientes.xml";
+    private final String RUTA_FICHERO = "../AlquilerVehiculos-v4/src/datos/clientes.xml";
     private final String TELEFONO = "Telefono";
     private final String CLIENTE = "Cliente";
     private final String NOMBRE = "Nombre";
