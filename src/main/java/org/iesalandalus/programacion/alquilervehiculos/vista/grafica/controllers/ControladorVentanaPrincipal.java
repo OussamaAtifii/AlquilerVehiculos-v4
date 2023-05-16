@@ -189,6 +189,7 @@ public class ControladorVentanaPrincipal {
 
         // Al inicializar la app, mostrar datos de los clientes:
         setAtributosClientes();
+        obsVehiculos.setAll(controladorMVC.getVehiculos());
         // Obtener alquilerse de cliente:
         tvClientes.setOnMouseClicked(e -> verAlquileres(e));
         // Obtener alquilerse de vehiculo:
